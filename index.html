@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="referrer" content="no-referrer">
+	<title>Monitor Size and Resolution Calculator</title>
+	<!-- <link rel="stylesheet" href="style.css"> -->
+	<script src="index.js"></script>
+</head>
+<body>
+	<h1>Monitor Size and Resolution Calculator</h1>
+	<p><a href="https://github.com/Flupp/monitor-size-and-resolution-calculator">GitHub project</a>.</p>
+	<table>
+		<thead>
+			<tr>
+				<th colspan="2">Resolution</th>
+				<th colspan="2"></th>
+				<th colspan="2">Dimensions</th>
+				<th colspan="2">Aspect Ratio</th>
+			</tr>
+			<tr>
+				<th>horizontal</th>
+				<th>vertical</th>
+				<th>Diagonal [in]</th>
+				<th>DPI</th>
+				<th>Width [cm]</th>
+				<th>Height [cm]</th>
+				<th>h</th>
+				<th>v</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="number" id="resX" name="TODO" min="1" max="99999" step="1" value="1920" style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="resY" name="TODO" min="1" max="99999" step="1" value="1080" style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="dimD" name="TODO" min="0" max="9999"  step="1" value="22"   style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="dpi"  name="TODO" min="0" max="999"   step="1" value=""     style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="dimX" name="TODO" min="0" max="9999"  step="1" value=""     style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="dimY" name="TODO" min="0" max="9999"  step="1" value=""     style="text-align: right; width: 8em;"></td>
+				<td><input type="number" id="aspX" name="TODO" min="1" max="999"   step="1" value="16"   style="text-align: right; width: 6em;" disabled></td>
+				<td><input type="number" id="aspY" name="TODO" min="1" max="999"   step="1" value="9"    style="text-align: right; width: 6em;" disabled></td>
+				<td><input type="button" id="buttonAdd" value="memorize"></td>
+			</tr>
+		</tbody>
+		<tbody id="memory" style="text-align: right;">
+		</tbody>
+	</table>
+</body>
+</html>
