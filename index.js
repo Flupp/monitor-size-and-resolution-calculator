@@ -75,6 +75,27 @@ window.onload = function() {
   const aspX = document.getElementById('aspX');
   const aspY = document.getElementById('aspY');
 
+  const buttonSave = document.getElementById('buttonSave');
+
+  const table = document.getElementById('memory');
+
+  buttonSave.onclick = function () {
+    const state = [];
+    state.push([resX, resY, dimD, dpi, dimX, dimY, aspX, aspY].map(x => +x.value));
+    for (const row of table.rows) {
+      const values = [];
+      for (let i = 0; i < 8; ++i) {
+        values.push(+row.childNodes[i].textContent);
+      }
+      state.push(values);
+    }
+    window.location.hash = JSON.stringify(state);
+    // const url = new URL(window.location);
+    // url.hash = JSON.stringify(state);
+    // history.replaceState(null, '', url.href);
+    buttonSave.disabled = true;
+  };
+
   function updateAspect(a) {
     const aspect = approximateRatio(a, 999);
     aspX.value = aspect.n;
@@ -89,6 +110,7 @@ window.onload = function() {
     dimY.value = (IN_TO_CM * dimYIn).toFixed(1);
     dpi .value = (resY.value / dimYIn).toFixed(1);
     updateAspect(a);
+    buttonSave.disabled = false;
   }
 
   function updateFromResDPI() {
@@ -96,6 +118,7 @@ window.onload = function() {
     dimX.value = (IN_TO_CM * +resX.value / +dpi.value).toFixed(1);
     dimY.value = (IN_TO_CM * +resY.value / +dpi.value).toFixed(1);
     updateAspect(+resX.value / +resY.value);
+    buttonSave.disabled = false;
   }
 
   function updateFromDimDPI() {
@@ -103,6 +126,7 @@ window.onload = function() {
     resY.value = (CM_TO_IN * +dimY.value * +dpi.value).toFixed(0);
     dimD.value = (Math.sqrt(sq(+resX.value) + sq(+resY.value)) / +dpi.value).toFixed(1);
     updateAspect(+dimX.value / +dimY.value);
+    buttonSave.disabled = false;
   }
 
   resX.oninput = updateFromResDiag;
@@ -114,19 +138,16 @@ window.onload = function() {
   // aspX.oninput = function () {  };
   // aspY.oninput = function () {  };
 
-  updateFromResDiag();
-
-  const table = document.getElementById('memory');
-  document.getElementById('buttonAdd').onclick = function () {
+  function addRow(_resX, _resY, _dimD, _dpi, _dimX, _dimY, _aspX, _aspY) {
     const row = table.insertRow(-1);
-    row.insertCell(-1).textContent = (+resX.value).toFixed(0);
-    row.insertCell(-1).textContent = (+resY.value).toFixed(0);
-    row.insertCell(-1).textContent = (+dimD.value).toFixed(1);
-    row.insertCell(-1).textContent = (+dpi .value).toFixed(1);
-    row.insertCell(-1).textContent = (+dimX.value).toFixed(1);
-    row.insertCell(-1).textContent = (+dimY.value).toFixed(1);
-    row.insertCell(-1).textContent = (+aspX.value).toFixed(0);
-    row.insertCell(-1).textContent = (+aspY.value).toFixed(0);
+    row.insertCell(-1).textContent = (+_resX).toFixed(0);
+    row.insertCell(-1).textContent = (+_resY).toFixed(0);
+    row.insertCell(-1).textContent = (+_dimD).toFixed(1);
+    row.insertCell(-1).textContent = (+_dpi ).toFixed(1);
+    row.insertCell(-1).textContent = (+_dimX).toFixed(1);
+    row.insertCell(-1).textContent = (+_dimY).toFixed(1);
+    row.insertCell(-1).textContent = (+_aspX).toFixed(0);
+    row.insertCell(-1).textContent = (+_aspY).toFixed(0);
 
     const buttonRestore = document.createElement("button");
     buttonRestore.textContent = 'restore';
@@ -139,26 +160,31 @@ window.onload = function() {
       dimY.value = row.childNodes[5].textContent;
       aspX.value = row.childNodes[6].textContent;
       aspY.value = row.childNodes[7].textContent;
+      buttonSave.disabled = false;
     };
 
     const buttonRemove = document.createElement("button");
     buttonRemove.textContent = 'remove';
-    buttonRemove.onclick = function () { row.remove(); };
+    buttonRemove.onclick = function () { row.remove(); buttonSave.disabled = false; };
 
     const buttonMoveUp = document.createElement("button");
     buttonMoveUp.textContent = '↑';
     buttonMoveUp.style.minWidth = '3em';
     buttonMoveUp.onclick = function () {
-      if (row.previousElementSibling !== null)
+      if (row.previousElementSibling !== null) {
         row.parentNode.insertBefore(row, row.previousElementSibling);
+        buttonSave.disabled = false;
+      }
     };
 
     const buttonMoveDown = document.createElement("button");
     buttonMoveDown.textContent = '↓';
     buttonMoveDown.style.minWidth = '3em';
     buttonMoveDown.onclick = function () {
-      if (row.nextElementSibling !== null)
+      if (row.nextElementSibling !== null) {
         row.parentNode.insertBefore(row.nextElementSibling, row);
+        buttonSave.disabled = false;
+      }
     };
 
     const buttons = row.insertCell(-1);
@@ -166,5 +192,32 @@ window.onload = function() {
     buttons.appendChild(buttonRemove);
     buttons.appendChild(buttonMoveUp);
     buttons.appendChild(buttonMoveDown);
+  }
+  document.getElementById('buttonAdd').onclick = function () {
+    addRow(resX.value, resY.value, dimD.value, dpi.value, dimX.value, dimY.value, aspX.value, aspY.value);
+    buttonSave.disabled = false;
   };
+
+  if (window.location.hash) {
+    try {
+      const state = JSON.parse(decodeURIComponent(window.location.hash).substring(1));
+      resX.value = state[0][0];
+      resY.value = state[0][1];
+      dimD.value = state[0][2];
+      dpi .value = state[0][3];
+      dimX.value = state[0][4];
+      dimY.value = state[0][5];
+      aspX.value = state[0][6];
+      aspY.value = state[0][7];
+      for (let i = 1; i < state.length; ++i) {
+        const r = state[i];
+        addRow(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7]);
+      }
+    } catch (e) {
+      console.warn('error while loading state from URL hash:', e);
+    }
+  } else {
+    updateFromResDiag();
+  }
+  buttonSave.disabled = true;
 };
