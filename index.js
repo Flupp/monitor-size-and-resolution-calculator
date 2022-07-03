@@ -74,6 +74,7 @@ window.onload = function() {
   const dimY = document.getElementById('dimY');
   const aspX = document.getElementById('aspX');
   const aspY = document.getElementById('aspY');
+  const note = document.getElementById('note');
 
   const buttonSave = document.getElementById('buttonSave');
 
@@ -81,12 +82,13 @@ window.onload = function() {
 
   buttonSave.onclick = function () {
     const state = [];
-    state.push([resX, resY, dimD, dpi, dimX, dimY, aspX, aspY].map(x => +x.value));
+    state.push([resX, resY, dimD, dpi, dimX, dimY, aspX, aspY].map(x => +x.value).concat([note.value]));
     for (const row of table.rows) {
       const values = [];
       for (let i = 0; i < 8; ++i) {
         values.push(+row.childNodes[i].textContent);
       }
+      values.push(row.childNodes[8].textContent);
       state.push(values);
     }
     window.location.hash = JSON.stringify(state);
@@ -137,8 +139,9 @@ window.onload = function() {
   dimY.oninput = updateFromDimDPI;
   // aspX.oninput = function () {  };
   // aspY.oninput = function () {  };
+  note.oninput = function () { buttonSave.disabled = false; };
 
-  function addRow(_resX, _resY, _dimD, _dpi, _dimX, _dimY, _aspX, _aspY) {
+  function addRow(_resX, _resY, _dimD, _dpi, _dimX, _dimY, _aspX, _aspY, _note) {
     const row = table.insertRow(-1);
     row.insertCell(-1).textContent = (+_resX).toFixed(0);
     row.insertCell(-1).textContent = (+_resY).toFixed(0);
@@ -148,6 +151,11 @@ window.onload = function() {
     row.insertCell(-1).textContent = (+_dimY).toFixed(1);
     row.insertCell(-1).textContent = (+_aspX).toFixed(0);
     row.insertCell(-1).textContent = (+_aspY).toFixed(0);
+    row.insertCell(-1).textContent = _note;
+
+    for (let i = 0; i < 8; ++i) {
+      row.cells[i].style="padding-right: 1em; text-align: right;";
+    }
 
     const buttonRestore = document.createElement("button");
     buttonRestore.textContent = 'restore';
@@ -160,6 +168,7 @@ window.onload = function() {
       dimY.value = row.childNodes[5].textContent;
       aspX.value = row.childNodes[6].textContent;
       aspY.value = row.childNodes[7].textContent;
+      note.value = row.childNodes[8].textContent;
       buttonSave.disabled = false;
     };
 
@@ -194,7 +203,7 @@ window.onload = function() {
     buttons.appendChild(buttonMoveDown);
   }
   document.getElementById('buttonAdd').onclick = function () {
-    addRow(resX.value, resY.value, dimD.value, dpi.value, dimX.value, dimY.value, aspX.value, aspY.value);
+    addRow(resX.value, resY.value, dimD.value, dpi.value, dimX.value, dimY.value, aspX.value, aspY.value, note.value);
     buttonSave.disabled = false;
   };
 
@@ -209,9 +218,10 @@ window.onload = function() {
       dimY.value = state[0][5];
       aspX.value = state[0][6];
       aspY.value = state[0][7];
+      note.value = state[0][8];
       for (let i = 1; i < state.length; ++i) {
         const r = state[i];
-        addRow(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7]);
+        addRow(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8]);
       }
     } catch (e) {
       console.warn('error while loading state from URL hash:', e);

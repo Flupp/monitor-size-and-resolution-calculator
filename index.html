@@ -17,7 +17,7 @@
 			<tr>
 				<th colspan="2">Resolution</th>
 				<th colspan="2"></th>
-				<th colspan="2">Dimensions</th>
+				<th colspan="2">Dimensions [cm]</th>
 				<th colspan="2">Aspect Ratio</th>
 			</tr>
 			<tr>
@@ -25,10 +25,11 @@
 				<th>vertical</th>
 				<th>Diagonal [in]</th>
 				<th>DPI</th>
-				<th>Width [cm]</th>
-				<th>Height [cm]</th>
+				<th>Width</th>
+				<th>Height</th>
 				<th>h</th>
 				<th>v</th>
+				<th>Note</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,10 +42,11 @@
 				<td><input type="number" id="dimY" name="TODO" min="0" max="9999"  step="1" value=""     style="text-align: right; width: 8em;"></td>
 				<td><input type="number" id="aspX" name="TODO" min="1" max="999"   step="1" value=""     style="text-align: right; width: 6em;" disabled></td>
 				<td><input type="number" id="aspY" name="TODO" min="1" max="999"   step="1" value=""     style="text-align: right; width: 6em;" disabled></td>
+				<td><input type="text"   id="note" name="TODO" min="1" max="999"   step="1" value=""     style="box-sizing: border-box;	width: 100%;"></td>
 				<td><input type="button" id="buttonAdd" value="memorize"></td>
 			</tr>
 		</tbody>
-		<tbody id="memory" style="text-align: right;">
+		<tbody id="memory">
 		</tbody>
 	</table>
 </body>
