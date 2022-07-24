@@ -201,6 +201,7 @@ window.onload = function() {
     buttons.appendChild(buttonRemove);
     buttons.appendChild(buttonMoveUp);
     buttons.appendChild(buttonMoveDown);
+    buttons.style = 'white-space: nowrap;';
   }
   document.getElementById('buttonAdd').onclick = function () {
     addRow(resX.value, resY.value, dimD.value, dpi.value, dimX.value, dimY.value, aspX.value, aspY.value, note.value);
